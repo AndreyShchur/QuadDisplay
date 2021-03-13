@@ -1,5 +1,11 @@
 #include "stm32f10x.h"
 
+
+// Init SPI1
+// Pin config:
+//     CLK  - GPIOA5
+//     MOSI - GPIOA7
+//     MISO - GPIOA6
 static void Init_SPI(void)
 {
 	RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
@@ -12,7 +18,7 @@ static void Init_SPI(void)
 	// MISO floating input
 	GPIOA->CRL &= ~GPIO_CRL_MODE6;
 	GPIOA->CRL |= GPIO_CRL_CNF6_0;
-	
+	 
 	
 	// CS Output Push-pull
 	GPIOA->CRL |= GPIO_CRL_MODE4;
@@ -21,37 +27,64 @@ static void Init_SPI(void)
 	// Set clock SPI1
 	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
 	
-	SPI1->CR1 |= SPI_CR1_BR;                 //Baud rate = Fpclk/256
-  //SPI1->CR1 &= ~SPI_CR1_CPOL;              //Polarity cls signal CPOL = 0;
-  //SPI1->CR1 &= ~SPI_CR1_CPHA;              //Phase cls signal    CPHA = 0;
-  //SPI1->CR1 |= SPI_CR1_DFF;                //16 bit data
-	//SPI1->CR1 &= ~SPI_CR1_LSBFIRST;          //MSB will be first
-  SPI1->CR1 |= SPI_CR1_SSM | SPI_CR1_SSI;  //Software slave management & Internal slave select
+	//Baud rate = Fpclk/256
+	SPI1->CR1 |= SPI_CR1_BR;
 	
-  SPI1->CR1 |= SPI_CR1_MSTR;               //Mode Master
-  SPI1->CR1 |= SPI_CR1_SPE;                //Enable SPI2
+	//8 bit data
+	SPI1->CR1 &= ~SPI_CR1_DFF;
 	
+	//MSB will be first
+	SPI1->CR1 &= ~SPI_CR1_LSBFIRST;
+	
+	//Software slave management & Internal slave select
+	SPI1->CR1 |= SPI_CR1_SSM | SPI_CR1_SSI;
+	
+	//Mode Master
+	SPI1->CR1 |= SPI_CR1_MSTR;
+	
+	//Enable SPI1
+	SPI1->CR1 |= SPI_CR1_SPE;
 }
 
+
+//---------------------MAIN FUNC--------------------------
 int main()
 {
 	Init_SPI();
-
-	uint8_t data[2U] = {255,0};
 	
+	uint8_t counter = 0;
+	uint8_t i = 0;
+	long j = 0;
+	
+	// SPI1 ready for work
 	while(!(SPI1->SR & SPI_SR_TXE));
 	
-	// Sec CS in 0
-	GPIOA->ODR &= ~GPIO_ODR_ODR4;   
-  for (int i = 0; i < 2; i++)
+	while(1)
 	{
-		SPI1->DR = data[i];  
-		while(!(SPI1->SR & SPI_SR_RXNE));
-    
-		data[i] = SPI1->DR;  
+		// CS in 0
+		GPIOA->ODR &= ~GPIO_ODR_ODR4;
+		// Write data
+		SPI1->DR = i;
+		// Wait writing
+		while(!(SPI1->SR & SPI_SR_TXE));
+		
+		// CS in 1
+		GPIOA->ODR |= GPIO_ODR_ODR4;
+	
+		// Shift left 1 bit
+		i = 1U << counter;
+		
+		// Check shift counter
+		counter = (counter == 8) ? 0 : counter + 1;
+		
+		// Delay
+		while(j < 2000000)
+		{
+			j++;
+		}
+		
+		j = 0;
 	}
-	// Sec CS in 1
-	GPIOA->ODR |= GPIO_ODR_ODR4;
 	
 	return 0;
 }

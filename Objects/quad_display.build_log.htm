@@ -22,22 +22,43 @@ Dialog DLL:      TCM.DLL V1.46.0.0
  
 <h2>Project:</h2>
 D:\Keil_Proj\QuadDisplay\quad_display.uvprojx
-Project File Date:  01/24/2021
+Project File Date:  01/25/2021
 
 <h2>Output:</h2>
 *** Using Compiler 'V6.14.1', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Build target 'Target 1'
-main.c(45): warning: implicit conversion changes signedness: 'int' to 'unsigned int' [-Wsign-conversion]
-        GPIOA->ODR &= ~GPIO_ODR_ODR4;   
+main.c(58): warning: implicit conversion changes signedness: 'int' to 'unsigned int' [-Wsign-conversion]
+        GPIOA->ODR &= ~GPIO_ODR_ODR5;
                    ~~ ^~~~~~~~~~~~~~
-main.c(51): warning: implicit conversion loses integer precision: 'volatile uint16_t' (aka 'volatile unsigned short') to 'uint8_t' (aka 'unsigned char') [-Wimplicit-int-conversion]
-                data[i] = SPI1->DR;  
-                        ~ ~~~~~~^~
-2 warnings generated.
+main.c(62): warning: implicit conversion changes signedness: 'int' to 'unsigned int' [-Wsign-conversion]
+        GPIOA->ODR &= ~GPIO_ODR_ODR4;
+                   ~~ ^~~~~~~~~~~~~~
+main.c(66): warning: implicit conversion changes signedness: 'int' to 'unsigned int' [-Wsign-conversion]
+                GPIOA->ODR &= ~GPIO_ODR_ODR7;
+                           ~~ ^~~~~~~~~~~~~~
+main.c(70): warning: implicit conversion changes signedness: 'int' to 'unsigned int' [-Wsign-conversion]
+                GPIOA->ODR &= ~GPIO_ODR_ODR5;
+                           ~~ ^~~~~~~~~~~~~~
+main.c(93): warning: implicit conversion changes signedness: 'int' to 'unsigned int' [-Wsign-conversion]
+                GPIOA->ODR &= ~GPIO_ODR_ODR4;   
+                           ~~ ^~~~~~~~~~~~~~
+main.c(102): warning: implicit conversion loses integer precision: 'unsigned int' to 'uint8_t' (aka 'unsigned char') [-Wimplicit-int-conversion]
+                i = 1U << counter;
+                  ~ ~~~^~~~~~~~~~
+main.c(114): warning: 'return' will never be executed [-Wunreachable-code-return]
+        return 0;
+               ^
+main.c(35): warning: unused function 'GPIOAInit' [-Wunused-function]
+static void GPIOAInit(void)
+            ^
+main.c(53): warning: unused function 'GPIOAWrite' [-Wunused-function]
+static void GPIOAWrite(void)
+            ^
+9 warnings generated.
 compiling main.c...
 linking...
-Program Size: Code=836 RO-data=252 RW-data=0 ZI-data=1632  
-".\Objects\quad_display.axf" - 0 Error(s), 2 Warning(s).
+Program Size: Code=1584 RO-data=252 RW-data=0 ZI-data=1632  
+".\Objects\quad_display.axf" - 0 Error(s), 9 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -64,11 +85,11 @@ Package Vendor: Keil
    * Component: ARM::CMSIS:CORE:5.4.0
 
    * Component: Keil::Device:Startup:1.0.0
-      Source file:   Device\Source\ARM\startup_stm32f10x_md.s
       Source file:   Device\Source\system_stm32f10x.c
-      Source file:   Device\Source\ARM\STM32F1xx_OPT.s
       Include file:  RTE_Driver\Config\RTE_Device.h
-Build Time Elapsed:  00:00:00
+      Source file:   Device\Source\ARM\STM32F1xx_OPT.s
+      Source file:   Device\Source\ARM\startup_stm32f10x_md.s
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>
